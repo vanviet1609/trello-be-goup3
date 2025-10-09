@@ -5,8 +5,8 @@ import {
     getUser,
     createUser,
     passCompare
-} from "../services/auth.service.js";
-import { responseHandler } from "../services/res.service.js";
+} from "../common/utils/auth.service.js";
+import { responseHandler } from "../common/utils/res.service.js";
 
 export const registerController = async (req, res) => {
     try {

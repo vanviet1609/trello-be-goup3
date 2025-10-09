@@ -1,9 +1,20 @@
 import User from "../../models/User.js";
 import bcrypt from "bcryptjs";
 import {responseHandler} from "./res.service.js";
-export const getUser = async (req) => {
+export const getUserByEmail = async (req) => {
     try {
         const user = await User.findOne({ email: req.body.email });
+        if(!user){
+            return false
+        }
+        return user;
+    } catch (error) {
+        console.log(error);
+    }
+}
+export const getUserById = async (req) => {
+    try {
+        const user = await User.findOne({ _id: req });
         if(!user){
             return false
         }
@@ -27,11 +38,11 @@ export const createUser = async (req, res) => {
     }
 }
 
-export const passCompare = async (userPass,inputPass) => {
+export const passCompare = async (inputPass,userPass) => {
     try {
         const isMatch = await bcrypt.compare(inputPass, userPass);
         if (!isMatch) {
-            return false
+            return false;
         }
         return isMatch;
     } catch (error) {
@@ -40,5 +51,5 @@ export const passCompare = async (userPass,inputPass) => {
 }
 
 
-export default { getUser, createUser, passCompare };
+export default { getUserByEmail, createUser, passCompare, getUserById };
 

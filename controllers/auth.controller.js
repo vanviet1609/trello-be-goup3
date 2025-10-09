@@ -2,15 +2,17 @@ import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import {
-    getUser,
+    getUserByEmail,
     createUser,
-    passCompare
+    passCompare,
+    getUserById
 } from "../common/utils/auth.service.js";
 import { responseHandler } from "../common/utils/res.service.js";
+import { get } from "mongoose";
 
 export const registerController = async (req, res) => {
     try {
-        const c = await getUser(req);
+        const c = await getUserByEmail(req);
         if (c === false) {
             let u = await createUser(req, res);
             responseHandler(res, 201, "Dang ky tai khoan thanh cong", u);
@@ -24,11 +26,12 @@ export const registerController = async (req, res) => {
 
 export const loginController = async (req, res) => {
     try {
-        const c = await getUser(req);
+        const c = await getUserByEmail(req);
         if (c === false) {
             responseHandler(res, 400, "Email khong ton tai");
         } else {
-            passCompare(c.password, req.body.password).then(isMatch => {
+            passCompare(req.body.password, c.password).then(isMatch => {
+                
                 if (!isMatch) {
                     responseHandler(res, 400, "Sai mat khau");
                 } else {
@@ -45,13 +48,12 @@ export const loginController = async (req, res) => {
 
 export const getMe = async (req, res) => {
     try {
-        const user = await User.findById(req.userId).select("-password");
+        const user = await getUserById(req.userId);
         if (!user) {
-            return res.status(404).json({
-                message: "Không tìm thấy user với token này"
-            })
+            responseHandler(res, 404, "Khong tim thay user");
+        } else {
+            responseHandler(res, 200, "Lay thong tin user thanh cong", user);
         }
-        res.json(user);
     } catch (error) {
         console.log(error);
     }

@@ -2,23 +2,20 @@ import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import {
-    getUserByEmail,
+    getUser,
     createUser,
-    passCompare,
-    getUserById
-} from "../common/utils/auth.service.js";
-import { responseHandler } from "../common/utils/res.service.js";
-import { get } from "mongoose";
+    passCompare
+} from "../services/auth.service.js";
+import { responseHandler } from "../services/res.service.js";
 
 export const registerController = async (req, res) => {
     try {
-        const c = await getUserByEmail(req);
+        const c = await getUser(req);
         if (c === false) {
             let u = await createUser(req, res);
             responseHandler(res, 201, "Dang ky tai khoan thanh cong", u);
         } else {
             responseHandler(res, 400, "Email da ton tai, vui long chon email khac");
-            
         }
     } catch (error) {
         console.log(error);
@@ -27,12 +24,11 @@ export const registerController = async (req, res) => {
 
 export const loginController = async (req, res) => {
     try {
-        const c = await getUserByEmail(req);
+        const c = await getUser(req);
         if (c === false) {
             responseHandler(res, 400, "Email khong ton tai");
         } else {
-            passCompare(req.body.password, c.password).then(isMatch => {
-                
+            passCompare(c.password, req.body.password).then(isMatch => {
                 if (!isMatch) {
                     responseHandler(res, 400, "Sai mat khau");
                 } else {
@@ -49,12 +45,13 @@ export const loginController = async (req, res) => {
 
 export const getMe = async (req, res) => {
     try {
-        const user = await getUserById(req.userId);
+        const user = await User.findById(req.userId).select("-password");
         if (!user) {
-            responseHandler(res, 404, "Khong tim thay user");
-        } else {
-            responseHandler(res, 200, "Lay thong tin user thanh cong", user);
+            return res.status(404).json({
+                message: "Không tìm thấy user với token này"
+            })
         }
+        res.json(user);
     } catch (error) {
         console.log(error);
     }

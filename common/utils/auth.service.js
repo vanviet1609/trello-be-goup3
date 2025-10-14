@@ -24,14 +24,12 @@ export const getUserById = async (req) => {
     }
 }
 
-export const createUser = async (req, res) => {
+export const createUser = async (req) => {
     try {
         const { username, password, email } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = await User.create({ username, password: hashedPassword, email });
-        if (!user) {
-            responseHandler(res, 400, "Tao tai khoan khong thanh cong");
-        }
+        
         return user;
     } catch (error) {
         console.log(error);

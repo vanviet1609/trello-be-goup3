@@ -15,13 +15,7 @@ const cardSchema = new mongoose.Schema(
         },
         dueDate: {
             type: Date,
-        },
-        assignTo: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'User'
-            }
-        ]
+        }
     },
     {
         versionKey: false,

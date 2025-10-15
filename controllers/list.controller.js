@@ -5,12 +5,16 @@ import {
     deleteList,
     renameList
 } from "../common/utils/list.service.js";
+import {
+    createCard,
+    getAllCards,
+} from "../common/utils/card.service.js";
 
 export const newList = async (req, res) => {
     try {
         const boardId = req.query.bid;
         const title = req.body.title;
-        const l = await createList(title,boardId);
+        const l = await createList(title, boardId);
         responseHandler(res, 201, "Tao list thanh cong", l);
     } catch (error) {
         console.log(error);
@@ -20,6 +24,11 @@ export const newList = async (req, res) => {
 export const getLists = async (req, res) => {
     try {
         const l = await getAllLists(req.query.bid);
+        const c = await
+            l.forEach(list => {
+                list.cards = getAllCards(list._id);
+            });
+
         responseHandler(res, 200, "Lay danh sach list thanh cong", l);
     } catch (error) {
         console.log(error);
@@ -38,8 +47,9 @@ export const removeList = async (req, res) => {
 
 export const nameList = async (req, res) => {
     try {
-        const listId = req.query.lid;
-        const l = await renameList(listId, req.body.title);
+        const listId = req.body.lid;
+        const title = req.body.title;
+        const l = await renameList(listId, title);
         responseHandler(res, 200, "Doi ten list thanh cong", l);
     } catch (error) {
         console.log(error);

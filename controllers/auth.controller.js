@@ -17,8 +17,7 @@ export const registerController = async (req, res) => {
             let u = await createUser(req, res);
             responseHandler(res, 201, "Dang ky tai khoan thanh cong", u);
         } else {
-            responseHandler(res, 400, "Email da ton tai, vui long chon email khac");
-            
+            responseHandler(res, 400, "Email da ton tai, vui long chon email khac"); 
         }
     } catch (error) {
         console.log(error);

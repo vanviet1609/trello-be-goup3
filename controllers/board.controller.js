@@ -28,7 +28,8 @@ export const getBoards = async (req, res) => {
 
 export const removeBoard = async (req, res) => {
     try {
-        const b = await deleteBoard(req.body.id);
+        const bid = req.query.bid;
+        const b = await deleteBoard(bid);
         responseHandler(res, 200, "Xoa board thanh cong", b);
     } catch (error) {
         console.log(error);
@@ -37,7 +38,8 @@ export const removeBoard = async (req, res) => {
 
 export const nameBoard = async (req, res) => {
     try {
-        const b = await renameBoard(req.body.id, req.body.title);
+        const boardId = req.query.bid;
+        const b = await renameBoard(boardId, req.body.title);
         responseHandler(res, 200, "Doi ten board thanh cong", b);
     } catch (error) {
         console.log(error);

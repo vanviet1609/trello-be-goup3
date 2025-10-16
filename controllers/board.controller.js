@@ -1,3 +1,4 @@
+
 import {
     createBoard,
     getAllBoards,
@@ -9,7 +10,10 @@ import { responseHandler } from "../common/utils/res.service.js";
 
 export const newBoard = async (req, res) => {
     try {
-        const b = await createBoard(req);
+        const title = req.body.title;
+        const userId = req.userId;
+        console.log(userId);
+        const b = await createBoard(title,userId);
         responseHandler(res, 201, "Tao board thanh cong", b);
 
     } catch (error) {

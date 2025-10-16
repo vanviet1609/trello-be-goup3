@@ -2,13 +2,13 @@ import Board from "../../models/Board.js";
 import { responseHandler } from "./res.service.js";
 import User from "../../models/User.js";
 
-export const createBoard = async (req) => {
+export const createBoard = async (title,userId) => {
     try {
-        const { title, } = req.body;
+        
         // console.log(req.userId);
-        const board = await Board.create({ title, owner: req.userId });
+        const board = await Board.create({ title: title, owner: userId });
         const u = await User.findOneAndUpdate(
-            { _id: req.userId },
+            { _id: userId },
             { $push: { boards: board._id } },
             { new: true }
         );

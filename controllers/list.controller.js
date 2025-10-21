@@ -8,7 +8,7 @@ import {
 
 export const newList = async (req, res) => {
     try {
-        const boardId = req.query.bid;
+        const boardId = req.body.board;
         const title = req.body.title;
         const l = await createList(title,boardId);
         responseHandler(res, 201, "Tao list thanh cong", l);
@@ -19,7 +19,7 @@ export const newList = async (req, res) => {
 
 export const getLists = async (req, res) => {
     try {
-        const l = await getAllLists(req.query.bid);
+        const l = await getAllLists(req.body.board);
         responseHandler(res, 200, "Lay danh sach list thanh cong", l);
     } catch (error) {
         console.log(error);

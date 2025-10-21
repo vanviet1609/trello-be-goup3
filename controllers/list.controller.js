@@ -12,7 +12,7 @@ import {
 
 export const newList = async (req, res) => {
     try {
-        const boardId = req.query.bid;
+        const boardId = req.body.board;
         const title = req.body.title;
         const l = await createList(title, boardId);
         responseHandler(res, 201, "Tao list thanh cong", l);
@@ -23,7 +23,7 @@ export const newList = async (req, res) => {
 
 export const getLists = async (req, res) => {
     try {
-        const l = await getAllLists(req.query.bid);
+        const l = await getAllLists(req.body.board);
         const c = await
             l.forEach(list => {
                 list.cards = getAllCards(list._id);
@@ -37,7 +37,7 @@ export const getLists = async (req, res) => {
 
 export const removeList = async (req, res) => {
     try {
-        const lid = req.query.lid;
+        const lid = req.body.lid;
         const l = await deleteList(lid);
         responseHandler(res, 200, "Xoa list thanh cong", l);
     } catch (error) {
